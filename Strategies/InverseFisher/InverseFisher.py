@@ -61,6 +61,7 @@ class InverseFisher(strategy):
         """
 
         df = df_input.copy()
+        print(params)
         params = params[0]
         f1 = getattr(function_lib, params[0])
         f2 = getattr(function_lib, params[1])

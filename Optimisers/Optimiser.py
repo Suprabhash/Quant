@@ -4,18 +4,18 @@ import multiprocessing
 from Optimisers.MCMC.MCMC import MCMC
 
 
-def brute_force_optimizer(*params, alpha, optim):
+def brute_force_optimizer(*params, alpha, optim, parallelize):
     params = params[0]
     inputs = list(itertools.product(*params))
-    # try:
-    #     pool = multiprocessing.Pool(processes=7, maxtasksperchild=1)
-    #     results = pool.map(metric, inputs)
-    # finally:  # To make sure processes are closed in the end, even if errors happen
-    #     pool.close()
-    #     pool.join()
-
-    results = [optim(alpha(inputs[i])) for i in range(len(inputs))]
-
+    if parallelize:
+        try:
+            pool = multiprocessing.Pool(processes=7, maxtasksperchild=1)
+            results = pool.map(metric, inputs)
+        finally:  # To make sure processes are closed in the end, even if errors happen
+            pool.close()
+            pool.join()
+    else:
+        results = [optim(alpha(inputs[i])) for i in range(len(inputs))]
     return results
 
 
@@ -65,7 +65,7 @@ class Optimiser():
     def import_data(self, df):
         self.data = df
 
-    def optimise(self):
+    def optimise(self, parallelize=True):
         if self.method == "BruteForce":
             if isinstance(self.data, type(None)):
                 params = self.parameter_searchspace
@@ -77,7 +77,7 @@ class Optimiser():
             else:
                 params = params + self.metrics_searchspace
 
-            return brute_force_optimizer(params, alpha=self.alpha_function, optim=self.optim_function)
+            return brute_force_optimizer(params, alpha=self.alpha_function, optim=self.optim_function, parallelize=parallelize)
 
         if self.method == "MCMC":
             mc = MCMC(alpha_fn=self.alpha_function, alpha_fn_params_0=self.guess, target=self.target,

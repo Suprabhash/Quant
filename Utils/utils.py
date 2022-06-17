@@ -37,9 +37,9 @@ def SendMail(emailIDs, strategy, ticker, sortby, ImgFileNameList):
 
     msg = MIMEMultipart()
     msg['Subject'] = f'{strategy}:{ticker} Top 3 strategies sorted by {sortby}'
-    msg['From'] = 'algo_notifications@acsysindia.com'
+    msg['From'] = 'suprabhash@quantiniti.com'
     msg['Cc'] = cc[:-1]   #
-    msg['To'] = 'algo_notifications@acsysindia.com'
+    msg['To'] = 'suprabhash@quantiniti.com'
 
     text = MIMEText(f'{ticker} Top 3 strategies sorted by {sortby}')
     msg.attach(text)
@@ -49,12 +49,12 @@ def SendMail(emailIDs, strategy, ticker, sortby, ImgFileNameList):
         image = MIMEImage(img_data, name=os.path.basename(ImgFileName))
         msg.attach(image)
 
-    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s = smtplib.SMTP('smtpout.secureserver.net', 465)
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login('algo_notifications@acsysindia.com', 'esahYah8')
-    s.sendmail('algo_notifications@acsysindia.com', emailIDs, msg.as_string())  #
+    s.login('suprabhash@quantiniti.com', 'esahYah8')
+    s.sendmail('suprabhash@quantiniti.com', emailIDs, msg.as_string())  #
     s.quit()
 
 ###

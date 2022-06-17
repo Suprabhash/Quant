@@ -103,7 +103,7 @@ class Deployer():
         self.dates = valid_dates(pd.date_range(start=str(self.data.iloc[0]['Datetime'] + timedelta(days=365)), end="2034-06-15", freq=f'{self.time_unit[0]}{self.time_unit[1]}'))
 
     def backtest(self, args):
-        _, ec = self.strategy.do_backtest(list(args[0:-1]), start = self.data.iloc[0]["Datetime"], end = self.data.iloc[-1]["Datetime"],allocation=10000, interest_rate=6, plot=False, save_plot_to=None)
+        _, ec = self.strategy.do_backtest(callable_functions_helper(list(args[0:-1]))[0], start = self.data.iloc[0]["Datetime"], end = self.data.iloc[-1]["Datetime"],allocation=10000, interest_rate=6, plot=False, save_plot_to=None)
         result = {"params": args[0:-1], "equity_curve": ec[['Datetime', 'Close', 'signal', 'Return', 'S_Return']]}
         with open(f'Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/SelectedStrategies/Backtests/{tuple(callable_functions_helper(list(result["params"]))[0])}.pkl','wb') as file:
             pickle.dump(result, file)
@@ -138,7 +138,7 @@ class Deployer():
                     if (ec.signal.iloc[0] == 1):
                         mask[0] = True
                     ec['trade_num'] = np.where(mask, 1, 0).cumsum()
-                    strategies[lookback][date_i]["metric_val"] = getattr(function_lib, args[-1])(ec)
+                    strategies[lookback][date_i]["metric_val"] = getattr(function_lib, args[-1].__name__)(ec)
                     strategies[lookback][date_i]['Lookback']=lookback
                 else:
                     strategies[lookback].append({"Train Start Date": None, "Train End Date": self.dates[date_i], "Strategies": None, "Lookback": lookback})
@@ -411,7 +411,7 @@ class Deployer():
                 for num_strategies in self.num_strategies:
                     for metric in self.metrics_opt:
 
-                        if path.exists(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategies\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric.__name__}.pkl"):
+                        if path.exists(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategiesResults_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric.__name__}.pkl"):
                             print("Already processed")
                             continue
 
@@ -432,7 +432,7 @@ class Deployer():
                                 # print(e)
                                 pass
 
-                        with open(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategies\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric.__name__}.pkl",'wb') as file:
+                        with open(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategies/Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric.__name__}.pkl",'wb') as file:
                             pickle.dump(selected_strategies, file)
 
 
@@ -442,7 +442,7 @@ class Deployer():
         num_strategies = args[2]
         metric = args[3]
 
-        with open(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategies\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.pkl",'rb') as file:
+        with open(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/weighted_strategies/Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric.__name__}.pkl",'rb') as file:
             selected_strategies = pickle.load(file)
 
         inp_all = pd.DataFrame()
@@ -474,14 +474,14 @@ class Deployer():
         inp_all = inp_all[["Close", "signal"]].reset_index().fillna(method="ffill")
         strat = backtester(data = inp_all, strategy=None)
         ec = strat.signal_performance(10000, 6, self.data_frequency).dropna()
-        strat.plot_performance(self.data_frequency, save_to=f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/equity_curves\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.jpg")
-        ec.to_csv(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/csv_files\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.csv")
+        strat.plot_performance(self.data_frequency, save_to=f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/equity_curves/Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.jpg")
+        ec.to_csv(f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/csv_files/Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.csv")
 
-    def select_best_and_mail_results(self, list):
+    def select_best_and_mail_results(self):
         optimiser = Optimiser(method="BruteForce")
         optimiser.define_parameter_searchspace([self.number_of_optimisation_periods, self.recalib_periods, self.num_strategies, self.metrics_opt])
         optimiser.define_alpha_function(self.backtest_weighted_strategy)
-        optimiser.optimise(parallelize=True)
+        optimiser.optimise(parallelize=False)
         res = []
         for number_of_optimization_period in self.number_of_optimisation_periods:
             for recalib_periods in self.recalib_periods:
@@ -515,7 +515,7 @@ class Deployer():
                 num_strategies = res_sorted.iloc[i]["Number of Strategies"]
                 metric = res_sorted.iloc[i]["Metric"]
                 temp_res = pd.read_csv(
-                    f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/csv_files\Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.csv",
+                    f"Caches/{self.ticker}/{self.data_frequency}/{self.strategy_name}/csv_files/Results_LP{number_of_optimization_period}_Recal{recalib_periods}_NS{num_strategies}_M{metric}.csv",
                                 parse_dates=True)
                 temp_res['Datetime'] = pd.to_datetime(temp_res['Datetime'])
                 plt.plot(temp_res['Datetime'], temp_res['Market_Return'], color='black', label='Market Returns')
@@ -534,15 +534,8 @@ class Deployer():
                     img_path = path_mail + '/' + file
                     images.append(img_path)
             emails = []
-            if "Suprabhash" in list:
-                emails.append("suprabhashsahu@acsysindia.com")
-            if "Aditya" in list:
-                emails.append("aditya@shankar.biz")
-            if "divakarank" in list:
-                emails.append("divakarank@acsysindia.com")
-            if "Sandesh" in list:
-                emails.append("saisandesh@acsysindia.com")
-            SendMail(emails, self.strategy_name, self.ticker, sortby, images)
+            emails.append("suprabhash.sahu@gmail.com")
+            # SendMail(emails, self.strategy_name, self.ticker, sortby, images)
 
 
 
