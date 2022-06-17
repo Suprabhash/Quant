@@ -5,16 +5,8 @@
 # Requirements: importlib, azure_data_tables==12.2.0, azure==4.0.0
 import investpy
 import pandas as pd
-import importlib.util
-spec = importlib.util.spec_from_file_location("account_name_and_key",
-                                                  "Z:/Algo/keys_and_passwords/Azure/account_name_and_key.py")
-azure_keys = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(azure_keys)
-_STORAGE_ACCOUNT_NAME = azure_keys._STORAGE_ACCOUNT_NAME
-_STORAGE_ACCOUNT_KEY = azure_keys._STORAGE_ACCOUNT_KEY
-
-from azure.data.tables import TableServiceClient
-from azure.core.credentials import AzureNamedKeyCredential
+import yfinance as yf
+from datetime import datetime
 
 def get_data(ticker, frequency):
     """
@@ -22,24 +14,12 @@ def get_data(ticker, frequency):
     :param frequency: Frequency of the data required. Currently supports daily and hourly. Pass "D" or "H"
     :return:  Returns the OHLCV dataframe indexed by datetime
     """
-
-    credential = AzureNamedKeyCredential(_STORAGE_ACCOUNT_NAME, _STORAGE_ACCOUNT_KEY)
-    table_service = TableServiceClient(endpoint="https://acsysbatchstroageacc.table.core.windows.net/",
-                                       credential=credential)
     if frequency=='H':
-        table_client = table_service.get_table_client(table_name="HourlyData")
+        interval = "1H"
     if frequency == 'D':
-        table_client = table_service.get_table_client(table_name="DailyData")
+        interval = "1D"
 
-    tasks = table_client.query_entities(query_filter=f"PartitionKey eq '{ticker}'")
-    list_dict = []
-    for i in tasks:
-        list_dict.append(i)
-
-    ticker_dataframe = pd.DataFrame(list_dict)
-    ticker_dataframe.drop(columns=["PartitionKey", "RowKey"], inplace=True)
-    ticker_dataframe.drop(columns="API", inplace=True)
-    ticker_dataframe[["Open", "High", "Low", "Close", "Volume"]] = ticker_dataframe[["Open", "High", "Low", "Close", "Volume"]].astype(float)
+    ticker_dataframe = yf.download(ticker, interval=interval, start="2009-01-01", end=str(datetime.now())[:10]).reset_index()
     if 'Date' in ticker_dataframe.columns:
         ticker_dataframe.rename(columns={'Date': 'Datetime'}, inplace=True)
     ticker_dataframe["Datetime"] = pd.to_datetime(ticker_dataframe["Datetime"])

@@ -2,10 +2,6 @@ import time
 import warnings
 warnings.filterwarnings("ignore")
 
-import os
-os.chdir("/Users/suprabhashsahu/Desktop/Quant/")
-
-
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (15,5)
 plt.rcParams['axes.grid'] = False
