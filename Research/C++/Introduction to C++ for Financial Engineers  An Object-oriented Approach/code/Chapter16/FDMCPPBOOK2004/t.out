@@ -1,0 +1,29 @@
+ Volume in drive C has no label.
+ Volume Serial Number is ECE6-9EB2
+
+ Directory of C:\cpp2006\Chapter16\FDMCPPBOOK2004
+
+02-08-2006  11:43    <DIR>          .
+02-08-2006  11:43    <DIR>          ..
+15-01-2006  21:49             2,311 Characteristics.cpp
+16-01-2006  07:29             2,743 Characteristics.hpp
+03-11-2003  23:09             9,347 detfunction.cpp
+03-11-2003  23:19             5,972 detfunction.hpp
+27-06-2002  17:22             3,420 doublesweep.cpp
+09-01-2006  05:19             1,410 doublesweep.hpp
+03-11-2003  22:39               950 FileClass.cpp
+03-11-2003  23:11             1,104 FileClass.hpp
+27-06-2002  17:22               183 function.cpp
+27-06-2002  17:22             1,071 function.hpp
+09-01-2006  09:20             4,234 FunctionSet.cpp
+09-01-2006  09:21             2,609 FunctionSet.hpp
+15-01-2006  20:42             4,550 main.cpp
+03-11-2003  23:16               559 pair.hpp
+16-01-2006  00:02            10,568 ParabolicFDM.cpp
+15-01-2006  20:24             3,189 ParabolicFDM.hpp
+09-01-2006  21:38             5,744 parabolicpde.cpp
+09-01-2006  21:38             3,290 parabolicpde.hpp
+02-08-2006  11:43                 0 t.out
+16-01-2006  00:27             4,314 TestAmericanOption.cpp
+              20 File(s)         67,568 bytes
+               2 Dir(s)  38,382,571,520 bytes free

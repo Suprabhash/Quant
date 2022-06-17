@@ -1,0 +1,12 @@
+pandas
+matplotlib
+seaborn
+tqdm
+hurst
+mplfinance
+investpy
+vix_utils
+sklearn
+jupyter
+pathos
+psutil

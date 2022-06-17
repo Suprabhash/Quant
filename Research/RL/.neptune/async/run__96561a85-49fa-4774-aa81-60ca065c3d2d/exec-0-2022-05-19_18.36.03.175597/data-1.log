@@ -1,0 +1,35 @@
+{"obj": {"type": "AssignString", "path": ["sys", "name"], "value": "Untitled"}, "version": 1}
+{"obj": {"type": "AssignString", "path": ["sys", "description"], "value": ""}, "version": 2}
+{"obj": {"type": "AssignString", "path": ["sys", "hostname"], "value": "acsyswvd02-18"}, "version": 3}
+{"obj": {"type": "AssignBool", "path": ["sys", "failed"], "value": false}, "version": 4}
+{"obj": {"type": "ClearStringLog", "path": ["monitoring", "stdout"]}, "version": 5}
+{"obj": {"type": "ClearStringLog", "path": ["monitoring", "stderr"]}, "version": 6}
+{"obj": {"type": "AssignString", "path": ["source_code", "entrypoint"], "value": "V5.py"}, "version": 7}
+{"obj": {"type": "UploadFileSet", "path": ["source_code", "files"], "file_globs": ["C:\\Users\\suprabhashsahu\\Desktop\\StrategyResearch\\RL\\V5.py"], "reset": "False"}, "version": 8}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "Info (NVML): NVML Shared Library Not Found. GPU usage metrics may not be reported. For more information, see https://docs.neptune.ai/you-should-know/what-can-you-log-and-display#hardware-consumption\n", "step": null, "ts": 1652965563.5728586}]}, "version": 9}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "cpu"], "min": 0.0, "max": 100.0, "unit": "%"}, "version": 10}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "cpu"]}, "version": 11}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "memory"], "min": 0.0, "max": 31.999561309814453, "unit": "GB"}, "version": 12}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "memory"]}, "version": 13}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "cpu"], "values": [{"value": 9.8, "step": null, "ts": 1652965563.5728586}]}, "version": 14}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "memory"], "values": [{"value": 15.78396224975586, "step": null, "ts": 1652965563.5728586}]}, "version": 15}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  0%|          | 0/100 [00:00<?, ?it/s]", "step": null, "ts": 1652965567.817156}]}, "version": 16}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Episode Number: 1, Total return of episode: 0.3451254058513258", "step": null, "ts": 1652965570.7372205}]}, "version": 17}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1652965570.7372205}]}, "version": 18}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  1%|          | 1/100 [00:03<05:36,  3.40s/it]", "step": null, "ts": 1652965571.2172534}]}, "version": 19}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "cpu"], "values": [{"value": 17.2, "step": null, "ts": 1652965573.592196}]}, "version": 20}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "memory"], "values": [{"value": 15.848400115966797, "step": null, "ts": 1652965573.592196}]}, "version": 21}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Episode Number: 2, Total return of episode: 0.20167892871291615", "step": null, "ts": 1652965573.8522015}]}, "version": 22}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1652965573.8522015}]}, "version": 23}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  2%|\u258f         | 2/100 [00:06<05:15,  3.22s/it]", "step": null, "ts": 1652965574.3086512}]}, "version": 24}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Episode Number: 3, Total return of episode: 0.20851920559321324", "step": null, "ts": 1652965576.9389343}]}, "version": 25}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1652965576.9389343}]}, "version": 26}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  3%|\u258e         | 3/100 [00:09<05:06,  3.16s/it]", "step": null, "ts": 1652965577.3989377}]}, "version": 27}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Episode Number: 4, Total return of episode: 0.3762488999380338", "step": null, "ts": 1652965580.0035257}]}, "version": 28}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1652965580.0035257}]}, "version": 29}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  4%|\u258d         | 4/100 [00:12<05:08,  3.21s/it]", "step": null, "ts": 1652965580.6835394}]}, "version": 30}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Episode Number: 5, Total return of episode: 0.2306456886793644", "step": null, "ts": 1652965583.5306969}]}, "version": 31}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1652965583.5306969}]}, "version": 32}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "cpu"], "values": [{"value": 23.7, "step": null, "ts": 1652965583.6056957}]}, "version": 33}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "memory"], "values": [{"value": 15.858600616455078, "step": null, "ts": 1652965583.6056957}]}, "version": 34}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "\r  5%|\u258c         | 5/100 [00:16<05:08,  3.24s/it]", "step": null, "ts": 1652965583.990705}]}, "version": 35}
