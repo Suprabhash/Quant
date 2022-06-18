@@ -1,0 +1,12 @@
+from pathos.multiprocessing import ProcessingPool
+
+def test(inp):
+    print(inp)
+    return inp
+
+if __name__ == "__main__":
+    inputs = [i for i in range(10000000)]
+    pool = ProcessingPool(nodes=7)
+    results = pool.map(test, inputs)
+    pool.close()
+    print(results)

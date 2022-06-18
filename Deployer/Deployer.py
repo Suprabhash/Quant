@@ -481,7 +481,7 @@ class Deployer():
         optimiser = Optimiser(method="BruteForce")
         optimiser.define_parameter_searchspace([self.number_of_optimisation_periods, self.recalib_periods, self.num_strategies, self.metrics_opt])
         optimiser.define_alpha_function(self.backtest_weighted_strategy)
-        optimiser.optimise(parallelize=False)
+        optimiser.optimise(parallelize=True)
         res = []
         for number_of_optimization_period in self.number_of_optimisation_periods:
             for recalib_periods in self.recalib_periods:

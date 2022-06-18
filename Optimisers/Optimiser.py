@@ -1,19 +1,20 @@
 import itertools
 import numpy as np
-import multiprocessing
+import psutil
 from Optimisers.MCMC.MCMC import MCMC
-
+import math
+import psutil
+from pathos.multiprocessing import ProcessingPool
 
 def brute_force_optimizer(*params, alpha, optim, parallelize):
+    def  brute_force(inp):
+        return optim(alpha(inp))
     params = params[0]
     inputs = list(itertools.product(*params))
     if parallelize:
-        try:
-            pool = multiprocessing.Pool(processes=7, maxtasksperchild=1)
-            results = pool.map(metric, inputs)
-        finally:  # To make sure processes are closed in the end, even if errors happen
-            pool.close()
-            pool.join()
+        pool = ProcessingPool(nodes=7)
+        results = pool.map(brute_force, inputs)
+        pool.clear()
     else:
         results = [optim(alpha(inputs[i])) for i in range(len(inputs))]
     return results

@@ -21,4 +21,3 @@ num_strategies = [1, 3, 5, 7]    #, 3, 5, 7
 metrics_opt = [rolling_sharpe, rolling_sortino, rolling_cagr, maxdrawup_by_maxdrawdown, outperformance] #, rolling_sortino, rolling_cagr, maxdrawup_by_maxdrawdown, outperformance
 consider_selected_strategies_over = 1    #
 starting_points = 10
-

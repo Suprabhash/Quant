@@ -24,10 +24,10 @@ if __name__ == "__main__":
     deployer.add_features()
 
     print("run_backtests"),
-    deployer.run_backtests(use_optimiser="BruteForce",parallelize=False)
+    deployer.run_backtests(use_optimiser="BruteForce",parallelize=True)
 
     print("Selecting Strategies")
-    deployer.select_strategies(use_optimiser = "BruteForce",parallelize=False)
+    deployer.select_strategies(use_optimiser = "BruteForce",parallelize=True)
 
     print("Checking Selected Strategies")
     deployer.check_selected_strategies(forward_months=2)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     deployer.optimize_weights()
 
     print("Selecting best and mailing results")
-    deployer.select_best_and_mail_results()
+    deployer.select_best_and_mail_results()  #, "Aditya"
 
 
 
