@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import itertools
 import Utils.add_features as function_lib
 from Utils.Num_cores import num_cores
+from Utils.utils import callable_functions_helper
 
 class InverseFisher(strategy):
     def __init__(self):
@@ -37,7 +38,7 @@ class InverseFisher(strategy):
             data[result.columns[-1]] = result.filter(regex='tanh_.+')
 
         # F1 Addition
-        params3 = [[data]] + [params[2], params[0], params[3]]
+        params3 = [[data]] + [params[2], list(set(params[0]+params[1])), list(set(params[3]+params[4]))]
         inputs = list(itertools.product(*params3))
         pool = ProcessingPool(num_cores)
         results = pool.map(add_F, inputs)
@@ -61,8 +62,8 @@ class InverseFisher(strategy):
         """
 
         df = df_input.copy()
-        print(params)
         params = params[0]
+        params = callable_functions_helper(params)[0]
         f1 = getattr(function_lib, params[0])
         f2 = getattr(function_lib, params[1])
         zscore_lookback = params[2]
