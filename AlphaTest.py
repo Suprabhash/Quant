@@ -39,7 +39,7 @@ if __name__ == "__main__":
     deployer.optimize_weights()
 
     print("Selecting best and mailing results")
-    deployer.select_best_and_mail_results()  #, "Aditya"
+    deployer.select_best_and_mail_results()
 
 
 

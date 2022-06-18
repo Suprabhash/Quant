@@ -10,3 +10,5 @@ sklearn
 jupyter
 pathos
 psutil
+yfinance
+numba
