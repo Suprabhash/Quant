@@ -12,3 +12,7 @@ pathos
 psutil
 yfinance
 numba
+tensorflow-macos
+neptune-client
+optuna
+neptune-optuna

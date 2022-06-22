@@ -21,44 +21,33 @@ from keras.layers import InputLayer
 from keras.layers import Dense
 import neptune.new as neptune
 from datetime import datetime
-from keras_visualizer import visualizer
 import scipy.stats as stats
 import neptune.new.integrations.optuna as optuna_utils
 import optuna
 import importlib.util
-from azure.data.tables import TableServiceClient, UpdateMode
-from azure.core.credentials import AzureNamedKeyCredential
 import os
 from keras.layers import Activation
 from keras import backend as K
 from keras.utils.generic_utils import get_custom_objects
+API_KEY="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiJkZDhlMWM3Zi1iMDExLTRmZDQtOTY4OS03MmY3ZjNiMzE5NzIifQ=="
+import yfinance as yf
 
+def get_data(ticker, frequency):
+    """
+    :param ticker: Ticker as on Reuters. Investpy and yfinance tickers can be passed using the lookup dict in tickers.py
+    :param frequency: Frequency of the data required. Currently supports daily and hourly. Pass "D" or "H"
+    :return:  Returns the OHLCV dataframe indexed by datetime
+    """
+    if frequency=='H':
+        interval = "1H"
+    if frequency == 'D':
+        interval = "1D"
 
-np.random.seed(12)
-spec = importlib.util.spec_from_file_location("account_name_and_key", "Z:\\Algo\\keys_and_passwords\\Azure\\account_name_and_key.py")
-azure_keys = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(azure_keys)
-_STORAGE_ACCOUNT_NAME = azure_keys._STORAGE_ACCOUNT_NAME
-_STORAGE_ACCOUNT_KEY = azure_keys._STORAGE_ACCOUNT_KEY
-_TABLE_SERVIVCE_ENDPOINT = azure_keys._TABLE_SERVIVCE_ENDPOINT
-
-spec = importlib.util.spec_from_file_location("email_and_password", "Z:\\Algo\\keys_and_passwords\\Gmail\\email_and_password.py")
-email_and_password = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(email_and_password)
-sender_email = email_and_password.sender_email
-sender_password = email_and_password.sender_password
-receiver_email1 = email_and_password.receiver_email1
-receiver_email2 = email_and_password.receiver_email2
-receiver_email3 = email_and_password.receiver_email3
-
-spec = importlib.util.spec_from_file_location("current_nifty_tickers", "Z:\\Algo\\data_retrieval\\Tickers\\current_nifty_tickers.py")
-current_nifty_tickers = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(current_nifty_tickers)
-
-current_nifty_tickers = current_nifty_tickers.current_nifty_tickers
-
-API_KEY="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiI0Yzg5MGZmYy1iMzVlLTQ1YTItODFiNS1hMTE2MTc1Mzc3ODUifQ=="
-
+    ticker_dataframe = yf.download(ticker, interval=interval, start="2009-01-01", end=str(datetime.now())[:10]).reset_index()
+    if 'Date' in ticker_dataframe.columns:
+        ticker_dataframe.rename(columns={'Date': 'Datetime'}, inplace=True)
+    ticker_dataframe["Datetime"] = pd.to_datetime(ticker_dataframe["Datetime"])
+    return ticker_dataframe
 
 def plot_performance(df, prices, features, actions_history, equity_curve, save=False):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(15, 7))
@@ -81,35 +70,6 @@ def plot_performance(df, prices, features, actions_history, equity_curve, save=F
     else:
         plt.show()
     return fig
-
-def get_data(ticker, frequency):
-    """
-    :param ticker: Ticker as on Reuters. Investpy and yfinance tickers can be passed using the lookup dict in tickers.py
-    :param frequency: Frequency of the data required. Currently supports daily and hourly. Pass "D" or "H"
-    :return:  Returns the OHLCV dataframe indexed by datetime
-    """
-
-    credential = AzureNamedKeyCredential(_STORAGE_ACCOUNT_NAME, _STORAGE_ACCOUNT_KEY)
-    table_service = TableServiceClient(endpoint="https://acsysbatchstroageacc.table.core.windows.net/",
-                                       credential=credential)
-    if frequency=='H':
-        table_client = table_service.get_table_client(table_name="HourlyData")
-    if frequency == 'D':
-        table_client = table_service.get_table_client(table_name="DailyData")
-
-    tasks = table_client.query_entities(query_filter=f"PartitionKey eq '{ticker}'")
-    list_dict = []
-    for i in tasks:
-        list_dict.append(i)
-
-    ticker_dataframe = pd.DataFrame(list_dict)
-    ticker_dataframe.drop(columns=["PartitionKey", "RowKey"], inplace=True)
-    ticker_dataframe.drop(columns="API", inplace=True)
-    ticker_dataframe[["Open", "High", "Low", "Close", "Volume"]] = ticker_dataframe[["Open", "High", "Low", "Close", "Volume"]].astype(float)
-    if 'Date' in ticker_dataframe.columns:
-        ticker_dataframe.rename(columns={'Date': 'Datetime'}, inplace=True)
-    ticker_dataframe["Datetime"] = pd.to_datetime(ticker_dataframe["Datetime"])
-    return ticker_dataframe
 
 def add_fisher(input):
     temp = input[0].copy()
@@ -211,7 +171,7 @@ def time_consolidator(df, period):
 
 def get_stock_data(symbol):
     if symbol == 'sinx':
-        df = get_data(".NSEI", 'D')
+        df = get_data("^NSEI", 'D')
         df.drop(columns=["Volume"], inplace=True)
         df["Close"] = df["Open"] = df["High"] = df["Low"] = np.sin(df.index / 10 ) +2
     elif symbol == 'SPY':

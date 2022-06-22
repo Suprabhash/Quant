@@ -246,9 +246,9 @@ def hyperparametric_tuning_optuna(run):
     return study.best_trials[0].params
 
 if __name__ == "__main__":
-    RECORD_EXPERIMENT = True
+    RECORD_EXPERIMENT = False
     if RECORD_EXPERIMENT:
-        run = neptune.init(project='pratiksaxena/V8-RL-ContinuousActionSpace', api_token=API_KEY)
+        run = neptune.init(project='quantiniti/ReinforcementLearning', api_token=API_KEY)
     save = {}
     save_images = {}
     save["ExperimentName"] = f"Run {datetime.now().strftime('%H:%M:%S')}: Experiments with continuous action space"
@@ -315,7 +315,7 @@ if __name__ == "__main__":
         plt.show()
 
     if RECORD_EXPERIMENT:
-        run = neptune.init(project='pratiksaxena/V8-RL-ContinuousActionSpace', api_token=API_KEY)
+        run = neptune.init(project='quantiniti/ReinforcementLearning', api_token=API_KEY)
         for key in save_images.keys():
             run[key].upload(save_images[key])
         for key in save.keys():
