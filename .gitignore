@@ -9,5 +9,6 @@
 /Research/Volume-Constance-Brown/Volume/SelectedStrategiesMRStdevNoRecalib.pkl
 /.venv/
 /Caches/
-
-
+/.git/
+/.venv/lib/python3.9/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
+/.git/objects/pack/pack-229d0f7f79bc54928290bc9c6c1bd4314cfc812c.pack
